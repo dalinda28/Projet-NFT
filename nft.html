@@ -11,21 +11,22 @@
 </head>
 
 <body>
-    <h1>Bienvenue sur le site de NFT</h1>
 </body>
 <script type="text/javascript">
     const root = document.querySelector('body');
+    let str = window.location.href;
+    let url = new URL(str);
+    let search_params = new URLSearchParams(url.search);
+    const id = search_params.get('id');
 
     async function nft() {
         try {
-            const url = 'https://awesome-nft-app.herokuapp.com/';
+            const url = `https://awesome-nft-app.herokuapp.com/nft/${id}`;
 
             fetch(url)
                 .then((resp) => resp.json())
-                .then(function(data) {
-                    console.log(data);
-                    let nfts = data.assets;
-                    createCards(nfts);
+                .then(function(unNft) {
+                    createCard(unNft);
                 })
                 .catch(function(error) {
                     console.log(error);
@@ -35,6 +36,9 @@
         }
     }
 
+    const myDiv = createElement('div', {
+        classe: 'nft_alone'
+    });
 
     function createElement(tag, config, parent = null) {
         const {
@@ -66,35 +70,36 @@
         return element;
     }
 
-    const myDiv = createElement('div');
+    function createCard(unNft) {
+        myImg = createElement('img', {
+            classe: 'nft_img',
+        }, myDiv);
+        myInfos = createElement('div', {}, myDiv);
+        myImg.src = unNft.image_url;
+        createElement('h1', {
+            text: unNft.name,
+        }, myInfos);
+        if (unNft.creator.username) {
+            createElement('p', {
+                text: `by ${unNft.creator.username}`,
+                href: `${unNft.creator.username}`,
+            }, myInfos);
+        } else {
+            createElement('p', {
+                text: 'anonymous creator'
+            }, myInfos);
+        }
+        createElement('span', {
+            text: unNft.sales
+        }, myInfos);
+        if (unNft.description) {
+            createElement('p', {
+                text: `<h3>Description</h3> ${unNft.description}`,
+            }, myInfos)
+        }
 
-    function createCards(data) {
-        data.forEach(el => {
-            myA = createElement('a', {
-                href: `/nft.html?id=${el.id}`
-            }, myDiv);
-            myImg = createElement('img', {
-                classe: 'nft_img',
-            }, myA);
-            myImg.src = el.image_url;
-            createElement('h2', {
-                text: el.name,
-            }, myA);
-            if (el.creator.username) {
-                createElement('p', {
-                    text: `by ${el.creator.username}`,
-                    href: `${el.creator.username}`,
-                }, myA);
-            } else {
-                createElement('p', {
-                    text: 'anonymous creator'
-                }, myA);
-            }
-            createElement('span', {
-                text: el.sales
-            }, myA);
-        })
     }
+
     nft();
 </script>
 
