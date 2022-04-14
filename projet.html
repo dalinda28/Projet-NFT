@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title></title>
+    <title>NFTS ECV</title>
 </head>
 
 <body>
@@ -22,12 +22,10 @@
             fetch(url)
                 .then((resp) => resp.json())
                 .then(function(data) {
-
+                    console.log(data);
                     let nfts = data.assets;
-                    console.log(nfts);
                     const tab = nfts.map(x => x.collection.name);
-                    console.log(tab);
-                    createCards(tab);
+                    createCards(nfts);
                 })
                 .catch(function(error) {
                     console.log(error);
@@ -41,15 +39,19 @@
     function createElement(tag, config, parent = null) {
         const {
             text,
-            color
+            color,
+            href,
+            creator
         } = config || {};
 
         const element = document.createElement(tag);
 
+        if (href) {
+            element.href = href;
+        }
         if (color) {
             element.style.color = color;
         }
-
         if (text) {
             element.innerHTML = text;
         }
@@ -65,12 +67,34 @@
 
     function createCards(data) {
         data.forEach(el => {
-            createElement('p', {
-                text: el,
-                color: 'red'
+            myA = createElement('a', {
+                href: `/${el.collection.slug}`,
             }, myDiv);
+            myImg = createElement('img', {}, myA);
+            myImg.src = el.image_url;
+            createElement('h2', {
+                text: el.collection.name,
+            }, myA);
+            createElement('p', {
+                text: `by ${el.creator.username}`,
+                href: `${el.creator.username}`,
+            }, myA);
+            myProfilImg = createElement('img', {}, myA);
+            myProfilImg.src = el.creator.profile_url;
+
+            price = createElement('span', {
+                text: el.sales
+            }, myA)
+            createCard(el);
         })
     }
+
+    function createCard(card) {
+        createElement('p', {
+            text: card.description,
+        }, myA)
+    }
+
 
     nft();
 </script>
