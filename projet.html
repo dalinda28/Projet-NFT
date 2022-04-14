@@ -4,13 +4,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/node_modules/@picocss/pico/css/pico.min.css">
     <title>NFTS ECV</title>
 
     <link href="style.css" rel="stylesheet">
-
 </head>
 
-<body>
+<body class="home">
     <h1>Bienvenue sur le site de NFT</h1>
 </body>
 <script type="text/javascript">
@@ -41,13 +41,21 @@
             text,
             classe,
             color,
-            href
+            href,
+            role,
+            event
         } = config || {};
 
         const element = document.createElement(tag);
 
         if (classe) {
             element.classList.add(classe);
+        }
+        if (event) {
+            element.onclick = event;
+        }
+        if (role) {
+            element.setAttribute("role", "button");
         }
         if (href) {
             element.href = href;
@@ -70,29 +78,37 @@
 
     function createCards(data) {
         data.forEach(el => {
-            myA = createElement('a', {
-                href: `/nft.html?id=${el.id}`
-            }, myDiv);
+            myCard = createElement('article', {}, myDiv);
             myImg = createElement('img', {
                 classe: 'nft_img',
-            }, myA);
+            }, myCard);
             myImg.src = el.image_url;
             createElement('h2', {
                 text: el.name,
-            }, myA);
+            }, myCard);
             if (el.creator.username) {
                 createElement('p', {
-                    text: `by ${el.creator.username}`,
-                    href: `${el.creator.username}`,
-                }, myA);
+                    text: `<span>by</span> ${el.creator.username}`,
+                }, myCard);
             } else {
                 createElement('p', {
                     text: 'anonymous creator'
-                }, myA);
+                }, myCard);
             }
             createElement('span', {
-                text: el.sales
-            }, myA);
+                classe: 'sales',
+                text: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2V6l-3-4H6zM3.8 6h16.4M16 10a4 4 0 1 1-8 0"/></svg> ${el.sales}`,
+            }, myCard);
+            myCardFooter = createElement('footer', {}, myCard);
+            createElement('a', {
+                text: 'En savoir plus',
+                href: `/nft.html?id=${el.id}`,
+                role: "button"
+            }, myCardFooter);
+            createElement('p', {
+                event: 'console.log("test")',
+                text: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>',
+            }, myCardFooter);
         })
     }
     nft();
