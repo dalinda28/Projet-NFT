@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+</head>
+
+<body>
+
+</body>
+<script type="text/javascript">
+    const root = document.querySelector('body');
+
+    async function nft() {
+        try {
+
+            const token = 'YTIxYzkyZjktNTI5ZC00ZTVmLTkyNzgtNjBhMjY4YmExOTdl';
+            const url = 'https://awesome-nft-app.herokuapp.com/';
+
+            fetch(url)
+                .then((resp) => resp.json())
+                .then(function(data) {
+
+                    let nfts = data.assets;
+                    console.log(nfts);
+                    const tab = nfts.map(x => x.collection.name);
+                    console.log(tab);
+                    createCards(tab);
+                })
+                .catch(function(error) {
+                    console.log(error);
+                });
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+
+    function createElement(tag, config, parent = null) {
+        const {
+            text,
+            color
+        } = config || {};
+
+        const element = document.createElement(tag);
+
+        if (color) {
+            element.style.color = color;
+        }
+
+        if (text) {
+            element.innerHTML = text;
+        }
+        if (!parent) {
+            root.appendChild(element);
+        } else {
+            parent.appendChild(element);
+        }
+        return element;
+    }
+
+    const myDiv = createElement('div');
+
+    function createCards(data) {
+        data.forEach(el => {
+            createElement('p', {
+                text: el,
+                color: 'red'
+            }, myDiv);
+        })
+    }
+
+    nft();
+</script>
+
+</html>
