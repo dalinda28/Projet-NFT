@@ -10,76 +10,24 @@ html {
     --primary-inverse: #fff;
 }
 
-.home h1 {
-    width: 100%;
-    text-align: center;
-    margin: 50px 0 0;
-}
-
-h2 {
-    margin: 10px 0 5px;
-    font-size: 24px;
-    line-height: 32px;
-}
-
-article>p {
-    font-size: 16px;
-    color: darkcyan;
-    margin: 0;
-}
-
-span {
-    color: black;
-}
-
-span.sales {
-    display: block;
-    margin: 10px 0 20px;
-    display: flex;
-    flex-direction: row-reverse;
-    align-items: center;
-    gap: 5px;
-}
-
-body>div {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-}
-
-body>div>article {
-    width: 30%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-article>.nft_img {
-    width: 100%;
+img {
     aspect-ratio: 1/1;
     object-fit: cover;
+    height: fit-content;
 }
 
-article footer {
+p {
+    font-size: 16px;
+}
+
+.carousel {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 0;
-}
-
-article footer p {
-    margin: 0;
-}
-
-.nft_alone {
-    display: flex;
+    justify-content: flex-start;
+    transition: 0.3s ease-in-out;
     gap: 30px;
 }
 
-.nft_alone img {
-    width: 40%;
-}
-
-.nft_alone>div {
-    width: 55%;
+article {
+    position: relative;
+    flex-shrink: 0;
 }
