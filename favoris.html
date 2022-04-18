@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/node_modules/@picocss/pico/css/pico.min.css">
+    <title>NFTS ECV</title>
+
+    <link href="style.css" rel="stylesheet">
+</head>
+
+<body class="favoris">
+    <a href="projet.html">Accueil</a>
+</body>
+<script src="main.js"></script>
+<script type="text/javascript">
+    // const root = document.querySelector('body');
+
+    // let favoris = [];
+
+    async function nftFavoris() {
+        try {
+
+            if (localStorage.getItem('like')) {
+                let fav = localStorage.getItem('like');
+                favoris = JSON.parse(fav);
+            }
+            createCardsFav(favoris);
+            getFavoris();
+
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+
+
+    const myDiv = createElement('div', {
+        display: 'flex',
+        flexFlow: 'wrap',
+        placeContent: 'space-evenly'
+    });
+    const titre = createElement('h1', {
+        width: '100%',
+        margin: '50px auto 0px',
+        textAlign: 'center',
+        text: 'Mes favoris'
+    }, myDiv)
+
+
+
+    nftFavoris();
+</script>
+
+</html>

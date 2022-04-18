@@ -4,103 +4,77 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/node_modules/@picocss/pico/css/pico.min.css">
     <title>NFTS ECV</title>
 
     <link href="style.css" rel="stylesheet">
 
 </head>
 
-<body>
+<body class="nftAlone">
+    <div class="carousel-nav">
+        <span id='prev'><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></span>
+        <span id='next'><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></span>
+    </div>
 </body>
+
+
+<script src="main.js"></script>
 <script type="text/javascript">
-    const root = document.querySelector('body');
     let str = window.location.href;
     let url = new URL(str);
     let search_params = new URLSearchParams(url.search);
     const id = search_params.get('id');
 
-    async function nft() {
-        try {
-            const url = `https://awesome-nft-app.herokuapp.com/nft/${id}`;
+    // création de la carte du NFT
+    const myNft = createElement('div', {
+        classe: 'nft_alone',
+        display: 'flex',
+        flexFlow: 'row-reverse',
+        margin: '40px'
+    });
+    const myInfos = createElement('article', {
+        margin: '0 0 0 40px',
+        width: '60%'
+    }, myNft);
+    const myHeader = createElement('header', {
+        display: 'flex',
+        flexFlow: 'wrap'
+    }, myInfos);
 
-            fetch(url)
-                .then((resp) => resp.json())
-                .then(function(unNft) {
-                    createCard(unNft);
-                })
-                .catch(function(error) {
-                    console.log(error);
-                });
-        } catch (e) {
-            console.log(e);
-        }
-    }
 
+    // création du carousel
     const myDiv = createElement('div', {
-        classe: 'nft_alone'
+        display: 'flex',
+        classe: 'carousel'
     });
 
-    function createElement(tag, config, parent = null) {
-        const {
-            text,
-            classe,
-            color,
-            href
-        } = config || {};
 
-        const element = document.createElement(tag);
+    const prev = document.getElementById('prev');
+    const next = document.getElementById('next');
+    const slider = document.querySelector('.carousel');
 
-        if (classe) {
-            element.classList.add(classe);
-        }
-        if (href) {
-            element.href = href;
-        }
-        if (color) {
-            element.style.color = color;
-        }
-        if (text) {
-            element.innerHTML = text;
-        }
-        if (!parent) {
-            root.appendChild(element);
-        } else {
-            parent.appendChild(element);
-        }
-        return element;
-    }
+    next.addEventListener('click', async() => {
+        slider.style.transition = await 'none';
+        slider.append(slider.firstElementChild);
+        setTimeout(async() => {
+            slider.style.transition = await '.3s ease-in-out';
+            slider.style.transform = 'translateX(0)'
+        })
+    })
 
-    function createCard(unNft) {
-        myImg = createElement('img', {
-            classe: 'nft_img',
-        }, myDiv);
-        myInfos = createElement('div', {}, myDiv);
-        myImg.src = unNft.image_url;
-        createElement('h1', {
-            text: unNft.name,
-        }, myInfos);
-        if (unNft.creator.username) {
-            createElement('p', {
-                text: `by ${unNft.creator.username}`,
-                href: `${unNft.creator.username}`,
-            }, myInfos);
-        } else {
-            createElement('p', {
-                text: 'anonymous creator'
-            }, myInfos);
-        }
-        createElement('span', {
-            text: unNft.sales
-        }, myInfos);
-        if (unNft.description) {
-            createElement('p', {
-                text: `<h3>Description</h3> ${unNft.description}`,
-            }, myInfos)
-        }
+    prev.addEventListener('click', async() => {
+        slider.style.transition = '.3s ease-in-out';
+        slider.prepend(slider.lastElementChild);
+        slider.style.transform = 'translateX(-30%)'
+        setTimeout(async() => {
 
-    }
+            slider.style.transform = 'translateX(0)'
+        })
+    })
 
-    nft();
+    unNft();
+    carousel();
 </script>
 
 </html>

@@ -16,9 +16,46 @@
 </style>
 
 <body class="home">
-    <h1>Bienvenue sur le site de NFT</h1>
+    <a href="favoris.html">Mes favoris</a>
 </body>
+<script src="main.js"></script>
 <script type="text/javascript">
+
+    // Trie par créateurs
+    const myListOfcreator = createElement('select');
+    myListOfcreator.setAttribute('style', `width: 30%;`);
+
+    const items = document.getElementsByTagName('article');
+    console.log(items);
+    myListOfcreator.addEventListener('change', e => {
+        input = e.target.value;
+        var pat = new RegExp(input, 'i');
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            if (pat.test(item.innerText)) {
+                item.classList.remove("hidden");
+            } else {
+                console.log(item);
+                item.classList.add("hidden");
+            }
+        }
+    });
+
+    //trie par vente
+    const myListOfSales = createElement('select');
+    myListOfSales.setAttribute('style', `width: 30%;`);
+    myListOfSales.addEventListener('change', e => {
+        input = e.target.value;
+        var pat = new RegExp(input, 'i');
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            if (pat.test(item.innerText)) {
+                item.classList.remove("hidden");
+            } else {
+                console.log(item);
+                item.classList.add("hidden");
+            }
+=======
     const root = document.querySelector('body');
     let myNfts = [];
 
@@ -86,9 +123,26 @@
 
             console.log(error);
 
-        }
-    }
 
+        }
+    });
+
+
+    //recherche
+    const myInput = createElement('input');
+    myInput.setAttribute('id', 'search');
+    myInput.setAttribute('style', `width: 40%;`);
+
+    myInput.addEventListener('keyup', e => {
+        const searchString = e.target.value;
+        const filteredNfts = myNfts.filter((character) => {
+            return (
+                character.sales.toLowerCase().includes(searchString)
+            );
+        });
+        console.log(filteredNfts);
+    });
+=======
     function createElement(tag, config, parent = null) {
         const {
             text,
@@ -99,34 +153,26 @@
             event
         } = config || {};
 
-        const element = document.createElement(tag);
+  
 
-        if (classe) {
-            element.classList.add(classe);
-        }
-        if (event) {
-            element.onclick = event;
-        }
-        if (role) {
-            element.setAttribute("role", "button");
-        }
-        if (href) {
-            element.href = href;
-        }
-        if (color) {
-            element.style.color = color;
-        }
-        if (text) {
-            element.innerHTML = text;
-        }
-        if (!parent) {
-            root.appendChild(element);
-        } else {
-            parent.appendChild(element);
-        }
-        return element;
-    }
+    // création de la div parente
+    const myDiv = createElement('div', {
+        display: 'flex',
+        flexFlow: 'wrap',
+        placeContent: 'space-evenly'
+    });
 
+    // titre de la page
+    const titre = createElement('h1', {
+        width: '100%',
+        margin: '50px auto 0px',
+        textAlign: 'center',
+        text: 'Bienvenue sur le site de NFT'
+    }, myDiv)
+
+
+    nfts();
+=======
     const myDiv = createElement('div');
 
     function createCards(data) {
@@ -179,6 +225,7 @@
     }
 
     nft();
+
 
 </script>
 
