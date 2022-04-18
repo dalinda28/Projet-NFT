@@ -10,108 +10,31 @@
     <link href="style.css" rel="stylesheet">
 </head>
 
-<body class="home">
-    <h1>Bienvenue sur le site de NFT</h1>
+<body class="favoris">
     <a href="projet.html">Accueil</a>
 </body>
+<script src="main.js"></script>
 <script type="text/javascript">
-    const root = document.querySelector('body');
+    // const root = document.querySelector('body');
 
-    async function nft() {
+    // let favoris = [];
+
+    async function nftFavoris() {
         try {
-            const url = 'https://awesome-nft-app.herokuapp.com/';
 
-            fetch(url)
-                .then((resp) => resp.json())
-                .then(function(data) {
-                    console.log(data);
-                    let nfts = data.assets;
-                    createCards(nfts);
-                })
-                .then(function() {
-                    getFavoris();
-                })
-                .catch(function(error) {
-                    console.log(error);
-                });
+            if (localStorage.getItem('like')) {
+                let fav = localStorage.getItem('like');
+                favoris = JSON.parse(fav);
+            }
+            createCardsFav(favoris);
+            getFavoris();
+
         } catch (e) {
             console.log(e);
         }
     }
 
-    function createElement(tag, config, parent = null) {
-        const {
-            text,
-            classe,
-            color,
-            href,
-            role,
-            event,
-            margin,
-            fontSize,
-            display,
-            width,
-            placeContent,
-            placeItem,
-            flexFlow,
-            textAlign,
-            identifiant
-        } = config || {};
 
-        const element = document.createElement(tag);
-
-        if (classe) {
-            element.classList.add(classe);
-        }
-        if (role) {
-            element.setAttribute("role", "button");
-        }
-        if (href) {
-            element.href = href;
-        }
-        if (color) {
-            element.style.color = color;
-        }
-        if (text) {
-            element.innerHTML = text;
-        }
-        if (margin) {
-            element.style.margin = margin;
-        }
-        if (fontSize) {
-            element.style.fontSize = fontSize;
-        }
-        if (display) {
-            element.style.display = display;
-        }
-        if (width) {
-            element.style.width = width;
-        }
-        if (placeItem) {
-            element.style.placeItems = placeItem;
-        }
-        if (placeContent) {
-            element.style.placeContent = placeContent;
-        }
-        if (flexFlow) {
-            element.style.flexFlow = flexFlow;
-        }
-        if (textAlign) {
-            element.style.textAlign = textAlign;
-        }
-        if (event) {
-            element.setAttribute("onclick", event);
-        }
-        if (identifiant) {
-            element.id = identifiant
-        }
-        if (!parent) {
-            root.appendChild(element);
-        } else {
-            parent.appendChild(element);
-        }
-        return element;
-    }
 
     const myDiv = createElement('div', {
         display: 'flex',
@@ -122,105 +45,12 @@
         width: '100%',
         margin: '50px auto 0px',
         textAlign: 'center',
-        text: 'Bienvenue sur le site de NFT'
+        text: 'Mes favoris'
     }, myDiv)
 
-    function createCards(data) {
-        data.forEach(el => {
-            myCard = createElement('article', {
-                width: '30%',
-                display: 'flex',
-                flexFlow: 'column',
-                placeContent: 'space-between'
-            }, myDiv);
-            myImg = createElement('img', {
-                classe: 'nft_img',
-            }, myCard);
-            myImg.src = el.image_url;
-            createElement('h2', {
-                text: el.name,
-                margin: '10px 0 5px',
-                fontSize: '24px'
-            }, myCard);
-            if (el.creator.username) {
-                createElement('p', {
-                    text: `<span style="color:black">by</span> ${el.creator.username}`,
-                    fontSize: '16px',
-                    color: 'darkcyan',
-                    margin: '0px'
-                }, myCard);
-            } else {
-                createElement('p', {
-                    text: 'anonymous creator',
-                    color: 'darkcyan',
-                    margin: '0px'
-                }, myCard);
-            }
-            createElement('span', {
-                flexFlow: 'row-reverse',
-                placeItem: 'center',
-                display: 'flex',
-                margin: '10px 0 20px',
-                text: `<svg style="margin-left: 5px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2V6l-3-4H6zM3.8 6h16.4M16 10a4 4 0 1 1-8 0"/></svg> ${el.sales}`,
-            }, myCard);
-            myCardFooter = createElement('footer', {
-                display: 'flex',
-                margin: '0px  -40px -40px',
-                placeItem: 'center',
-                placeContent: 'space-between'
-            }, myCard);
-            createElement('a', {
-                text: 'En savoir plus',
-                href: `/nft.html?id=${el.id}`,
-                role: "button"
-            }, myCardFooter);
-            createElement('p', {
-                classe: 'like',
-                event: `favorisNft(fav_${el.id})`,
-                identifiant: `fav_${el.id}`,
-                margin: '0',
-                text: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>',
-            }, myCardFooter);
-        })
-    }
-
-    nft();
-
-    let favoris = [];
-
-    function getFavoris() {
-        if (localStorage.getItem('like')) {
-            let fav = localStorage.getItem('like');
-            favoris = JSON.parse(fav);
-            favoris.forEach(function(element) {
-                document.querySelector(`#${element}`).classList.add("favoris");
-                document.querySelector(`#${element} svg`).style.fill = "black";
-            })
-            let likeItems = document.querySelectorAll('.like');
-            likeItems.forEach(likeItem => {
-                if (!likeItem.classList.contains('favoris')) {
-                    likeItem.parentNode.parentNode.style.display = "none";
-                }
-
-            })
-        };
-    }
 
 
-    function favorisNft(nft) {
-        nft = nft.getAttribute("id");
-        favoris.forEach(function(element) {
-            let index_favoris = favoris.indexOf(element);
-            favoris.splice(index_favoris, 1);
-        })
-
-        document.querySelector(`#${nft} svg`).style.fill = "none";
-        document.querySelector(`#${nft}`).classList.remove("favoris");
-        document.querySelector(`#${nft}`).parentNode.parentNode.style.display = "none";
-
-        localStorage.setItem('like', JSON.stringify(favoris));
-        console.log(favoris);
-    }
+    nftFavoris();
 </script>
 
 </html>
