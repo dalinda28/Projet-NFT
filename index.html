@@ -49,14 +49,14 @@
         width: '30%',
     });
 
+    console.log(myListOfSales);
+
     myListOfSales.addEventListener('change', e => {
         input = e.target.value;
         let pat = new RegExp(`^${input}$`, 'i');
         for (let i = 0; i < sales.length; i++) {
             let sale = sales[i];
             sale.parentNode.classList.remove("hidden");
-            console.log(input);
-
             if (pat.test(sale.innerText)) {
                 sale.parentNode.classList.remove("hidden");
             } else if (input == 'All') {

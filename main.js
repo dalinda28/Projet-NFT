@@ -22,9 +22,9 @@ async function nfts(page) {
             .then(function() {
                 getFavoris();
             })
-            // .then(function() {
-            //     loadImage();
-            // })
+            .then(function() {
+                loadImage();
+            })
             .catch(function(error) {
                 console.log(error);
             });
@@ -76,6 +76,7 @@ function createElement(tag, config, parent = null) {
         text,
         classe,
         color,
+        backgroundColor,
         href,
         role,
         event,
@@ -88,6 +89,7 @@ function createElement(tag, config, parent = null) {
         flexFlow,
         textAlign,
         identifiant,
+        loadingImage,
     } = config || {};
 
     const element = document.createElement(tag);
@@ -103,6 +105,9 @@ function createElement(tag, config, parent = null) {
     }
     if (color) {
         element.style.color = color;
+    }
+    if (backgroundColor) {
+        element.style.backgroundColor = backgroundColor;
     }
     if (text) {
         element.innerHTML = text;
@@ -137,6 +142,9 @@ function createElement(tag, config, parent = null) {
     if (identifiant) {
         element.id = identifiant
     }
+    if (loadingImage) {
+        element.setAttribute("data-src", loadingImage);
+    }
     if (!parent) {
         root.appendChild(element);
     } else {
@@ -145,13 +153,16 @@ function createElement(tag, config, parent = null) {
     return element;
 }
 
+// function removeDuplicate(tab) {
+//     console.log(tab);
+//     tab.filter(function(item, index) {
+//         tab.indexOf(item) != index;
+//     });
+//     console.log(tab);
+// }
+
+
 function createCards(data, next, previous) {
-    const divNfts = createElement('div', {
-        classe: 'nfts',
-        display: 'flex',
-        flexFlow: 'wrap',
-        placeContent: 'space-evenly'
-    });
     createElement('option', {
         text: `<select id="listOfSale" name="sales">
     <option value="all" >All</option>
@@ -162,19 +173,21 @@ function createCards(data, next, previous) {
     <option value="all" >All</option>
 </select>`,
     }, myListOfcreator);
+    const divNfts = createElement('div', {
+        classe: 'nfts',
+        display: 'flex',
+        flexFlow: 'wrap',
+        placeContent: 'space-evenly'
+    });
+
+    let mySelectNumberOfSale = [];
+    let mySelectNumberOfCreator = [];
     data.forEach((el, index) => {
         if (root.classList.contains('home')) {
-            mySelect = createElement('option', {
-                text: `<select id="listOfCreator" name="creators">
-            <option value="${el.creator.username}" >${el.creator.username}</option>
-    </select>`,
-            }, myListOfcreator);
 
-            mySelectNumberOfSale = createElement('option', {
-                text: `<select id="listOfSale" name="sales">
-            <option value="${el.sales}" >${el.sales}</option>
-    </select>`,
-            }, myListOfSales);
+            mySelectNumberOfCreator.push(el.creator.username);
+            mySelectNumberOfSale.push(el.sales);
+
         }
         myCard = createElement('article', {
             width: '30%',
@@ -182,23 +195,20 @@ function createCards(data, next, previous) {
             flexFlow: 'column',
             placeContent: 'space-between'
         }, divNfts);
-        myImg = createElement('img', {
-            classe: 'nft_img_load',
-        }, myCard);
-        myImg.src = el.image_url;
-        // //chargement différé des images
-        // if (index == 0 || index == 1 || index == 2) {
-        //     myImg = createElement('img', {
-        //         classe: 'nft_img_load',
-        //     }, myCard);
-        //     myImg.src = el.image_url;
-        // } else {
-        //     myImg = createElement('img', {
-        //         classe: 'nft_img',
-        //         loadingImage: el.image_url,
-        //         backgroundColor: '#00897b'
-        //     }, myCard);
-        // }
+
+        if (index == 0 || index == 1 || index == 2) {
+            myImg = createElement('img', {
+                classe: 'nft_img_load',
+            }, myCard);
+            myImg.src = el.image_url;
+        } else {
+            myImg = createElement('img', {
+                classe: 'nft_img',
+                loadingImage: el.image_url,
+                backgroundColor: '#00897b'
+            }, myCard);
+        }
+
         createElement('h2', {
             text: el.name,
             margin: '10px 0 5px',
@@ -253,7 +263,39 @@ function createCards(data, next, previous) {
         text: 'Suivant',
         event: `nfts(${next})`
     }, divNfts);
+
+
+    myUniqueCreator = mySelectNumberOfCreator.filter(function(item, pos) {
+        return mySelectNumberOfCreator.indexOf(item) == pos;
+    });
+
+    myUniqueCreator.sort().forEach(function(element) {
+        createElement('option', {
+            text: `<select id="listOfCreator" name="creators">
+        <option value="${element}" >${element}</option>
+    </select>`,
+        }, myListOfcreator);
+    })
+
+
+    myUniqueSales = mySelectNumberOfSale.filter(function(item, pos) {
+        return mySelectNumberOfSale.indexOf(item) == pos;
+    });
+
+    myUniqueSales.sort(function(a, b) {
+        return a - b;
+    }).forEach(function(element) {
+        createElement('option', {
+            text: `<select id="listOfSale" name="sales">
+                <option value="${element}" >${element}</option>
+        </select>`,
+        }, myListOfSales);
+    })
 }
+
+
+
+
 
 function createCard(unNft) {
     myImg = createElement('img', {
@@ -484,12 +526,9 @@ function loadImage() {
 
         lazyloadTimeout = setTimeout(function() {
             let scrollTop = window.pageYOffset;
-
             lazyImages.forEach(function(img) {
-                console.log(img);
-                if (img.offsetTop < script(`${window.innerHeight}${scrollTop}`)) {
+                if (img.parentNode.offsetTop < (window.innerHeight + scrollTop)) {
                     img.src = img.dataset.src;
-                    console.log(img.dataset.src);
                     img.classList.remove('lazy');
                     img.style.backgroundColor = "transparent";
                 }
@@ -498,7 +537,7 @@ function loadImage() {
                 document.removeEventListener("scroll", lazyload);
                 window.removeEventListener("resize", lazyload);
             }
-        }, 20);
+        }, 50);
     }
 
     document.addEventListener("scroll", lazyload);
