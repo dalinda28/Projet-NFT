@@ -25,7 +25,7 @@
     myListOfcreator.setAttribute('style', `width: 30%;`);
 
     const items = document.getElementsByTagName('article');
-    console.log(items);
+
     myListOfcreator.addEventListener('change', e => {
         input = e.target.value;
         var pat = new RegExp(input, 'i');
