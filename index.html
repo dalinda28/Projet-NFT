@@ -21,10 +21,13 @@
 <script src="main.js"></script>
 <script type="text/javascript">
     // Trie par créateurs
-    const myListOfcreator = createElement('select');
-    myListOfcreator.setAttribute('style', `width: 30%;`);
+    const myListOfcreator = createElement('select', {
+        width: '30%',
+    });
 
     const items = document.getElementsByTagName('article');
+    const sales = document.getElementsByClassName('sales');
+    console.log(sales);
 
     myListOfcreator.addEventListener('change', e => {
         input = e.target.value;
@@ -33,35 +36,47 @@
             var item = items[i];
             if (pat.test(item.innerText)) {
                 item.classList.remove("hidden");
+            } else if (input == 'All') {
+                item.classList.remove("hidden");
             } else {
-                console.log(item);
                 item.classList.add("hidden");
             }
         }
     });
 
     //trie par vente
-    const myListOfSales = createElement('select');
-    myListOfSales.setAttribute('style', `width: 30%;`);
+    const myListOfSales = createElement('select', {
+        width: '30%',
+    });
+
     myListOfSales.addEventListener('change', e => {
         input = e.target.value;
-        var pat = new RegExp(input, 'i');
-        for (var i = 0; i < items.length; i++) {
-            var item = items[i];
-            if (pat.test(item.innerText)) {
-                item.classList.remove("hidden");
+        let pat = new RegExp(`^${input}$`, 'i');
+        for (let i = 0; i < sales.length; i++) {
+            let sale = sales[i];
+            sale.parentNode.classList.remove("hidden");
+            console.log(input);
+
+            if (pat.test(sale.innerText)) {
+                sale.parentNode.classList.remove("hidden");
+            } else if (input == 'All') {
+                sale.parentNode.classList.remove("hidden");
             } else {
-                console.log(item);
-                item.classList.add("hidden");
+                sale.parentNode.classList.add("hidden");
             }
         }
     });
+    // removeDuplicate = (tableau) => tableau.filter((item, index) => tableau.indexOf(item) == index);
 
+    // console.log(Array.from(myListOfSales));
+
+    // removeDuplicate(myListOfSales);
 
     //recherche
-    const myInput = createElement('input');
-    myInput.setAttribute('id', 'search');
-    myInput.setAttribute('style', `width: 40%;`);
+    const myInput = createElement('input', {
+        identifiant: 'search',
+        width: '40%',
+    });
 
     myInput.addEventListener('keyup', e => {
         const searchString = e.target.value;

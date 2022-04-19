@@ -22,6 +22,9 @@ async function nfts(page) {
             .then(function() {
                 getFavoris();
             })
+            // .then(function() {
+            //     loadImage();
+            // })
             .catch(function(error) {
                 console.log(error);
             });
@@ -149,7 +152,17 @@ function createCards(data, next, previous) {
         flexFlow: 'wrap',
         placeContent: 'space-evenly'
     });
-    data.forEach(el => {
+    createElement('option', {
+        text: `<select id="listOfSale" name="sales">
+    <option value="all" >All</option>
+</select>`,
+    }, myListOfSales);
+    createElement('option', {
+        text: `<select id="listOfCreator" name="creators">
+    <option value="all" >All</option>
+</select>`,
+    }, myListOfcreator);
+    data.forEach((el, index) => {
         if (root.classList.contains('home')) {
             mySelect = createElement('option', {
                 text: `<select id="listOfCreator" name="creators">
@@ -170,9 +183,22 @@ function createCards(data, next, previous) {
             placeContent: 'space-between'
         }, divNfts);
         myImg = createElement('img', {
-            classe: 'nft_img',
+            classe: 'nft_img_load',
         }, myCard);
         myImg.src = el.image_url;
+        // //chargement différé des images
+        // if (index == 0 || index == 1 || index == 2) {
+        //     myImg = createElement('img', {
+        //         classe: 'nft_img_load',
+        //     }, myCard);
+        //     myImg.src = el.image_url;
+        // } else {
+        //     myImg = createElement('img', {
+        //         classe: 'nft_img',
+        //         loadingImage: el.image_url,
+        //         backgroundColor: '#00897b'
+        //     }, myCard);
+        // }
         createElement('h2', {
             text: el.name,
             margin: '10px 0 5px',
@@ -197,6 +223,7 @@ function createCards(data, next, previous) {
             placeItem: 'center',
             display: 'flex',
             margin: '10px 0 20px',
+            classe: 'sales',
             text: `<svg style="margin-left: 5px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2V6l-3-4H6zM3.8 6h16.4M16 10a4 4 0 1 1-8 0"/></svg> ${el.sales}`,
         }, myCard);
         myCardFooter = createElement('footer', {
@@ -337,7 +364,6 @@ function createCardsCarousel(data) {
 
 function createCardsFav(data) {
     data.forEach((el, index) => {
-        console.log(el.image);
         myCard = createElement('article', {
             width: '30%',
             display: 'flex',
@@ -379,34 +405,6 @@ function createCardsFav(data) {
 }
 
 let favoris = [];
-console.log(favoris);
-
-// function favorisNft(nft) {
-//     // console.log(nft.namedItem("id"));
-//     nft = nft.getAttribute("id");
-//     let bool = 0;
-//     favoris.forEach(function(element) {
-//         if (element == nft) {
-//             bool = 1;
-//             let index_favoris = favoris.indexOf(element);
-//             favoris.splice(index_favoris, 1);
-//         }
-//     })
-
-//     if (bool == 0) {
-//         favoris.push(nft);
-//         document.querySelector(`#${nft} svg`).style.fill = "black";
-//         document.querySelector(`#${nft}`).classList.add("favoris");
-
-//     } else {
-//         document.querySelector(`#${nft} svg`).style.fill = "none";
-//         document.querySelector(`#${nft}`).classList.remove("favoris");
-//         document.querySelector(`#${nft}`).parentNode.parentNode.style.display = "none";
-
-//     }
-//     localStorage.setItem('like', JSON.stringify(favoris));
-//     console.log(favoris);
-// }
 
 function favorisNft(id, image, name) {
     let nft = {
@@ -442,7 +440,6 @@ function getFavoris() {
     if (localStorage.getItem('like')) {
         let fav = localStorage.getItem('like');
         favoris = JSON.parse(fav);
-        console.log(favoris);
         favoris.forEach(function(element) {
             if (document.querySelector(`#fav_${element.id} svg`)) {
                 document.querySelector(`#fav_${element.id}`).classList.add('favoris');
@@ -450,6 +447,7 @@ function getFavoris() {
             }
         })
     };
+    console.log(favoris);
 }
 
 function favorisNftFav(id, image, name) {
@@ -471,5 +469,39 @@ function favorisNftFav(id, image, name) {
     document.querySelector(`#fav_${nft.id}`).parentNode.parentNode.style.display = "none";
 
     localStorage.setItem('like', JSON.stringify(favoris));
-    console.log(favoris);
+}
+
+function loadImage() {
+    const lazyImages = document.querySelectorAll(".nft_img");
+
+    let lazyloadTimeout;
+
+
+    function lazyload() {
+        if (lazyloadTimeout) {
+            clearTimeout(lazyloadTimeout); //annule le délais de setTimeout précédent
+        }
+
+        lazyloadTimeout = setTimeout(function() {
+            let scrollTop = window.pageYOffset;
+
+            lazyImages.forEach(function(img) {
+                console.log(img);
+                if (img.offsetTop < script(`${window.innerHeight}${scrollTop}`)) {
+                    img.src = img.dataset.src;
+                    console.log(img.dataset.src);
+                    img.classList.remove('lazy');
+                    img.style.backgroundColor = "transparent";
+                }
+            });
+            if (lazyImages.length == 0) {
+                document.removeEventListener("scroll", lazyload);
+                window.removeEventListener("resize", lazyload);
+            }
+        }, 20);
+    }
+
+    document.addEventListener("scroll", lazyload);
+    window.addEventListener("resize", lazyload);
+
 }
