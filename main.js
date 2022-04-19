@@ -14,7 +14,7 @@ async function nfts(page) {
                 let nfts = data.assets;
                 let next = data.next;
                 let previous = data.previous;
-                nfts = nfts.filter(function (val) {
+                nfts = nfts.filter(function(val) {
                     return val.creator.username != '';
                 })
                 createCards(nfts, next, previous);
@@ -207,7 +207,7 @@ function createCards(data, next, previous) {
         }, myCard);
         createElement('a', {
             text: 'En savoir plus',
-            href: `/nft.html?id=${el.id}`,
+            href: `/detailNft.html?id=${el.id}`,
             role: "button"
         }, myCardFooter);
         createElement('p', {
@@ -279,7 +279,7 @@ function createCard(unNft) {
 function createCardsCarousel(data) {
     data.slice(0, 10).forEach(el => {
         myCard = createElement('article', {
-            width: '30%',
+            width: 'calc(25% - 20px)',
             display: 'flex',
             flexFlow: 'column',
             placeContent: 'space-between'
@@ -322,7 +322,7 @@ function createCardsCarousel(data) {
         }, myCard);
         createElement('a', {
             text: 'En savoir plus',
-            href: `/nft.html?id=${el.id}`,
+            href: `/detailNft.html?id=${el.id}`,
             role: "button"
         }, myCardFooter);
         // createElement('p', {
@@ -365,7 +365,7 @@ function createCardsFav(data) {
         }, myCard);
         createElement('a', {
             text: 'En savoir plus',
-            href: `/nft.html?id=${el.id}`,
+            href: `/detailNft.html?id=${el.id}`,
             role: "button"
         }, myCardFooter);
         createElement('p', {

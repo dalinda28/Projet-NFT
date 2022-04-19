@@ -35,3 +35,8 @@ article {
 .hidden {
     display: none !important;
 }
+
+.next,
+.prev {
+    cursor: pointer;
+}
