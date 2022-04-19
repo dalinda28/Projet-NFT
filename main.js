@@ -14,6 +14,9 @@ async function nfts(page) {
                 let nfts = data.assets;
                 let next = data.next;
                 let previous = data.previous;
+                nfts = nfts.filter(function (val) {
+                    return val.creator.username != '';
+                })
                 createCards(nfts, next, previous);
             })
             .then(function() {
