@@ -20,6 +20,60 @@
 </body>
 <script src="main.js"></script>
 <script type="text/javascript">
+    // Trie par créateurs
+    const myListOfcreator = createElement('select');
+    myListOfcreator.setAttribute('style', `width: 30%;`);
+
+    const items = document.getElementsByTagName('article');
+    console.log(items);
+    myListOfcreator.addEventListener('change', e => {
+        input = e.target.value;
+        var pat = new RegExp(input, 'i');
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            if (pat.test(item.innerText)) {
+                item.classList.remove("hidden");
+            } else {
+                console.log(item);
+                item.classList.add("hidden");
+            }
+        }
+    });
+
+    //trie par vente
+    const myListOfSales = createElement('select');
+    myListOfSales.setAttribute('style', `width: 30%;`);
+    myListOfSales.addEventListener('change', e => {
+        input = e.target.value;
+        var pat = new RegExp(input, 'i');
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            if (pat.test(item.innerText)) {
+                item.classList.remove("hidden");
+            } else {
+                console.log(item);
+                item.classList.add("hidden");
+            }
+        }
+    });
+
+
+    //recherche
+    const myInput = createElement('input');
+    myInput.setAttribute('id', 'search');
+    myInput.setAttribute('style', `width: 40%;`);
+
+    myInput.addEventListener('keyup', e => {
+        const searchString = e.target.value;
+        const filteredNfts = myNfts.filter((character) => {
+            return (
+                character.sales.toLowerCase().includes(searchString)
+            );
+        });
+        console.log(filteredNfts);
+    });
+
+
     // création de la div parente
     const myDiv = createElement('div', {
         display: 'flex',
@@ -37,8 +91,6 @@
 
 
     nfts();
-
-
 </script>
 
 </html>
