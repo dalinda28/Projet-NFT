@@ -14,18 +14,18 @@ async function nfts(page) {
                 let nfts = data.assets;
                 let next = data.next;
                 let previous = data.previous;
-                nfts = nfts.filter(function(val) {
+                nfts = nfts.filter(function (val) {
                     return val.creator.username != '';
                 })
                 createCards(nfts, next, previous);
             })
-            .then(function() {
+            .then(function () {
                 getFavoris();
             })
-            .then(function() {
+            .then(function () {
                 loadImage();
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log(error);
             });
     } catch (e) {
@@ -39,10 +39,10 @@ async function unNft() {
 
         fetch(url)
             .then((resp) => resp.json())
-            .then(function(unNft) {
+            .then(function (unNft) {
                 createCard(unNft);
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log(error);
             });
     } catch (e) {
@@ -60,10 +60,10 @@ async function carousel() {
                 let nfts = data.assets;
                 createCardsCarousel(nfts);
             })
-            .then(function() {
+            .then(function () {
                 getFavoris();
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log(error);
             });
     } catch (e) {
@@ -90,6 +90,7 @@ function createElement(tag, config, parent = null) {
         textAlign,
         identifiant,
         loadingImage,
+        placeholder,
     } = config || {};
 
     const element = document.createElement(tag);
@@ -145,6 +146,9 @@ function createElement(tag, config, parent = null) {
     if (loadingImage) {
         element.setAttribute("data-src", loadingImage);
     }
+    if (placeholder) {
+        element.setAttribute("placeholder", placeholder);
+    }
     if (!parent) {
         root.appendChild(element);
     } else {
@@ -161,6 +165,38 @@ function createElement(tag, config, parent = null) {
 //     console.log(tab);
 // }
 
+//SearchBar
+let mySelectNameNft = []
+
+const myInput = createElement('input', {
+    identifiant: 'search',
+    display: 'flex',
+    margin: '0 30%',
+    width: '40%',
+    placeholder: "Search by NFT name"
+});
+
+const articles = document.getElementsByTagName('article');
+myInput.addEventListener('keyup', e => {
+    const searchString = e.target.value;
+    var pat = new RegExp(searchString, 'i');
+
+    const filteredNfts = mySelectNameNft.filter((character) => {
+        return (
+            character.includes(searchString)
+        );
+    });
+    for (var i = 0; i < articles.length; i++) {
+        var item = articles[i];
+        if (pat.test(item.innerText)) {
+            item.classList.remove("hidden");
+        } else {
+            item.classList.add("hidden");
+        }
+    }
+});
+
+
 
 function createCards(data, next, previous) {
     createElement('option', {
@@ -173,6 +209,8 @@ function createCards(data, next, previous) {
     <option value="all" >All</option>
 </select>`,
     }, myListOfcreator);
+
+
     const divNfts = createElement('div', {
         classe: 'nfts',
         display: 'flex',
@@ -182,12 +220,13 @@ function createCards(data, next, previous) {
 
     let mySelectNumberOfSale = [];
     let mySelectNumberOfCreator = [];
+
     data.forEach((el, index) => {
         if (root.classList.contains('home')) {
 
             mySelectNumberOfCreator.push(el.creator.username);
             mySelectNumberOfSale.push(el.sales);
-
+            mySelectNameNft.push(el.name);
         }
         myCard = createElement('article', {
             width: '30%',
@@ -243,7 +282,7 @@ function createCards(data, next, previous) {
             placeContent: 'space-between'
         }, myCard);
         createElement('a', {
-            text: 'En savoir plus',
+            text: 'Learn more',
             href: `/detailNft.html?id=${el.id}`,
             role: "button"
         }, myCardFooter);
@@ -265,11 +304,13 @@ function createCards(data, next, previous) {
     }, divNfts);
 
 
-    myUniqueCreator = mySelectNumberOfCreator.filter(function(item, pos) {
+
+
+    myUniqueCreator = mySelectNumberOfCreator.filter(function (item, pos) {
         return mySelectNumberOfCreator.indexOf(item) == pos;
     });
 
-    myUniqueCreator.sort().forEach(function(element) {
+    myUniqueCreator.sort().forEach(function (element) {
         createElement('option', {
             text: `<select id="listOfCreator" name="creators">
         <option value="${element}" >${element}</option>
@@ -278,13 +319,13 @@ function createCards(data, next, previous) {
     })
 
 
-    myUniqueSales = mySelectNumberOfSale.filter(function(item, pos) {
+    myUniqueSales = mySelectNumberOfSale.filter(function (item, pos) {
         return mySelectNumberOfSale.indexOf(item) == pos;
     });
 
-    myUniqueSales.sort(function(a, b) {
+    myUniqueSales.sort(function (a, b) {
         return a - b;
-    }).forEach(function(element) {
+    }).forEach(function (element) {
         createElement('option', {
             text: `<select id="listOfSale" name="sales">
                 <option value="${element}" >${element}</option>
@@ -390,7 +431,7 @@ function createCardsCarousel(data) {
             placeContent: 'space-between'
         }, myCard);
         createElement('a', {
-            text: 'En savoir plus',
+            text: 'Learn morev',
             href: `/detailNft.html?id=${el.id}`,
             role: "button"
         }, myCardFooter);
@@ -432,7 +473,7 @@ function createCardsFav(data) {
             placeContent: 'space-between'
         }, myCard);
         createElement('a', {
-            text: 'En savoir plus',
+            text: 'Learn morev',
             href: `/detailNft.html?id=${el.id}`,
             role: "button"
         }, myCardFooter);
@@ -456,7 +497,7 @@ function favorisNft(id, image, name) {
     }
 
     let bool = 0;
-    favoris.forEach(function(element) {
+    favoris.forEach(function (element) {
         if (element.id == nft.id) {
             bool = 1;
             let index_favoris = favoris.indexOf(element);
@@ -475,21 +516,19 @@ function favorisNft(id, image, name) {
 
     }
     localStorage.setItem('like', JSON.stringify(favoris));
-    console.log(favoris);
 }
 
 function getFavoris() {
     if (localStorage.getItem('like')) {
         let fav = localStorage.getItem('like');
         favoris = JSON.parse(fav);
-        favoris.forEach(function(element) {
+        favoris.forEach(function (element) {
             if (document.querySelector(`#fav_${element.id} svg`)) {
                 document.querySelector(`#fav_${element.id}`).classList.add('favoris');
                 document.querySelector(`#fav_${element.id} svg`).style.fill = "black";
             }
         })
     };
-    console.log(favoris);
 }
 
 function favorisNftFav(id, image, name) {
@@ -499,7 +538,7 @@ function favorisNftFav(id, image, name) {
         name: name
     }
 
-    favoris.forEach(function(element) {
+    favoris.forEach(function (element) {
         if (element.id == nft.id) {
             let index_favoris = favoris.indexOf(element);
             favoris.splice(index_favoris, 1);
@@ -524,9 +563,9 @@ function loadImage() {
             clearTimeout(lazyloadTimeout); //annule le délais de setTimeout précédent
         }
 
-        lazyloadTimeout = setTimeout(function() {
+        lazyloadTimeout = setTimeout(function () {
             let scrollTop = window.pageYOffset;
-            lazyImages.forEach(function(img) {
+            lazyImages.forEach(function (img) {
                 if (img.parentNode.offsetTop < (window.innerHeight + scrollTop)) {
                     img.src = img.dataset.src;
                     img.classList.remove('lazy');
