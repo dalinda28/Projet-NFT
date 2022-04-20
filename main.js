@@ -291,7 +291,7 @@ function createCards(data, next, previous) {
         margin: '0 10px'
     }, myButton);
     createElement('button', {
-        text: 'Suivant',
+        text: 'Next',
         event: `nfts(${next})`,
         role: 'button',
         width: 'fit-content',
