@@ -9,14 +9,8 @@
     <link rel="icon" type="image/png" sizes="16x16" href="./NFT_Icon.png">
     <link href="style.css" rel="stylesheet">
 </head>
-<style>
-    .hidden {
-        display: none;
-    }
-</style>
 
 <body class="home">
-    <a href="favoris.html">My whishlist</a>
 </body>
 <script src="main.js"></script>
 <script type="text/javascript">
@@ -27,19 +21,23 @@
         placeContent: 'space-evenly',
         placeholder: 'Rechercher un nft'
     });
-
-
     // titre de la page
     const titre = createElement('h1', {
-            width: '100%',
-            margin: '50px auto 0px',
-            textAlign: 'center',
-            text: 'Welcome to NonFungible website'
-        }, myDiv)
-        // Trie par créateurs
+        width: '100%',
+        margin: '50px auto 0px',
+        textAlign: 'center',
+        text: 'Welcome to NonFungible website'
+    }, myDiv)
+
+    const searchBox = createElement('div', {
+        display: 'flex',
+        placeContent: 'center',
+        margin: '50px 0 0'
+    });
+    // Trie par créateurs
     const myListOfcreator = createElement('select', {
         width: '25%',
-    });
+    }, searchBox);
 
     const items = document.getElementsByTagName('article');
     const sales = document.getElementsByClassName('sales');
@@ -51,7 +49,7 @@
             var item = items[i];
             if (pat.test(item.innerText)) {
                 item.classList.remove("hidden");
-            } else if (input == 'All') {
+            } else if (input == 'All creators') {
                 item.classList.remove("hidden");
             } else {
                 item.classList.add("hidden");
@@ -61,8 +59,9 @@
 
     //trie par vente
     const myListOfSales = createElement('select', {
-        width: '10%',
-    });
+        width: '15%',
+        margin: '0 20px 20px'
+    }, searchBox);
 
     myListOfSales.addEventListener('change', e => {
         input = e.target.value;
@@ -72,22 +71,43 @@
             sale.parentNode.classList.remove("hidden");
             if (pat.test(sale.innerText)) {
                 sale.parentNode.classList.remove("hidden");
-            } else if (input == 'All') {
+            } else if (input == 'All sales') {
                 sale.parentNode.classList.remove("hidden");
             } else {
                 sale.parentNode.classList.add("hidden");
             }
         }
     });
-    // removeDuplicate = (tableau) => tableau.filter((item, index) => tableau.indexOf(item) == index);
 
-    // console.log(Array.from(myListOfSales));
+    //SearchBar
+    let mySelectNameNft = []
 
-    // removeDuplicate(myListOfSales);
+    const myInput = createElement('input', {
+        identifiant: 'search',
+        display: 'flex',
+        width: '40%',
+        placeholder: "Search by NFT name or creator"
+    }, searchBox);
 
+    const articles = document.getElementsByTagName('article');
+    myInput.addEventListener('keyup', e => {
+        const searchString = e.target.value;
+        var pat = new RegExp(searchString, 'i');
 
-
-
+        const filteredNfts = mySelectNameNft.filter((character) => {
+            return (
+                character.includes(searchString)
+            );
+        });
+        for (var i = 0; i < articles.length; i++) {
+            var item = articles[i];
+            if (pat.test(item.innerText)) {
+                item.classList.remove("hidden");
+            } else {
+                item.classList.add("hidden");
+            }
+        }
+    });
 
     nfts();
 </script>

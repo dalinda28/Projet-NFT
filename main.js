@@ -71,6 +71,27 @@ async function carousel() {
     }
 }
 
+const menu = createElement('nav', {
+    placeContent: 'center',
+    backgroundColor: 'rgb(0 139 139 / 10%)'
+});
+
+const myUlMenu = createElement('ul', {}, menu);
+const myLiMenu1 = createElement('li', {}, myUlMenu);
+const myLiMenu2 = createElement('li', {}, myUlMenu);
+
+createElement('a', {
+    href: 'index.html',
+    text: 'Home',
+    margin: '15px 0'
+}, myLiMenu1)
+
+createElement('a', {
+    href: 'favoris.html',
+    text: 'My whishlist',
+    margin: '15px 0 '
+}, myLiMenu2)
+
 function createElement(tag, config, parent = null) {
     const {
         text,
@@ -157,56 +178,16 @@ function createElement(tag, config, parent = null) {
     return element;
 }
 
-// function removeDuplicate(tab) {
-//     console.log(tab);
-//     tab.filter(function(item, index) {
-//         tab.indexOf(item) != index;
-//     });
-//     console.log(tab);
-// }
-
-//SearchBar
-let mySelectNameNft = []
-
-const myInput = createElement('input', {
-    identifiant: 'search',
-    display: 'flex',
-    margin: '0 30%',
-    width: '40%',
-    placeholder: "Search by NFT name"
-});
-
-const articles = document.getElementsByTagName('article');
-myInput.addEventListener('keyup', e => {
-    const searchString = e.target.value;
-    var pat = new RegExp(searchString, 'i');
-
-    const filteredNfts = mySelectNameNft.filter((character) => {
-        return (
-            character.includes(searchString)
-        );
-    });
-    for (var i = 0; i < articles.length; i++) {
-        var item = articles[i];
-        if (pat.test(item.innerText)) {
-            item.classList.remove("hidden");
-        } else {
-            item.classList.add("hidden");
-        }
-    }
-});
-
-
 
 function createCards(data, next, previous) {
     createElement('option', {
         text: `<select id="listOfSale" name="sales">
-    <option value="all" >All</option>
+    <option value="all" >All sales</option>
 </select>`,
     }, myListOfSales);
     createElement('option', {
         text: `<select id="listOfCreator" name="creators">
-    <option value="all" >All</option>
+    <option value="all" >All creators</option>
 </select>`,
     }, myListOfcreator);
 
@@ -294,14 +275,28 @@ function createCards(data, next, previous) {
             text: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>',
         }, myCardFooter);
     })
+    const myButton = createElement('div', {
+        display: 'flex',
+        placeContent: 'center',
+        width: '100%',
+        margin: '30px 0 50px '
+    }, divNfts)
+
+    //boutons next et previous
     createElement('button', {
-        text: 'Précedent',
-        event: `nfts(${previous})`
-    }, divNfts);
+        text: 'Previous',
+        event: `nfts(${previous})`,
+        role: 'button',
+        width: 'fit-content',
+        margin: '0 10px'
+    }, myButton);
     createElement('button', {
         text: 'Suivant',
-        event: `nfts(${next})`
-    }, divNfts);
+        event: `nfts(${next})`,
+        role: 'button',
+        width: 'fit-content',
+        margin: '0 10px'
+    }, myButton);
 
     // affichage des créateurs sans doublons
     myUniqueCreator = mySelectNumberOfCreator.filter(function(item, pos) {
@@ -438,7 +433,7 @@ function createCardsCarousel(data) {
             placeContent: 'space-between'
         }, myCard);
         createElement('a', {
-            text: 'Learn morev',
+            text: 'Learn more',
             href: `/detailNft.html?id=${el.id}`,
             role: "button"
         }, myCardFooter);
@@ -480,7 +475,7 @@ function createCardsFav(data) {
             placeContent: 'space-between'
         }, myCard);
         createElement('a', {
-            text: 'Learn morev',
+            text: 'Learn more',
             href: `/detailNft.html?id=${el.id}`,
             role: "button"
         }, myCardFooter);
