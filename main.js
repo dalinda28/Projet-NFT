@@ -14,18 +14,18 @@ async function nfts(page) {
                 let nfts = data.assets;
                 let next = data.next;
                 let previous = data.previous;
-                nfts = nfts.filter(function (val) {
-                    return val.creator.username != '';
-                })
+                // nfts = nfts.filter(function (val) {
+                //     return val.creator.username != '';
+                // })
                 createCards(nfts, next, previous);
             })
-            .then(function () {
+            .then(function() {
                 getFavoris();
             })
-            .then(function () {
+            .then(function() {
                 loadImage();
             })
-            .catch(function (error) {
+            .catch(function(error) {
                 console.log(error);
             });
     } catch (e) {
@@ -39,10 +39,10 @@ async function unNft() {
 
         fetch(url)
             .then((resp) => resp.json())
-            .then(function (unNft) {
+            .then(function(unNft) {
                 createCard(unNft);
             })
-            .catch(function (error) {
+            .catch(function(error) {
                 console.log(error);
             });
     } catch (e) {
@@ -60,10 +60,10 @@ async function carousel() {
                 let nfts = data.assets;
                 createCardsCarousel(nfts);
             })
-            .then(function () {
+            .then(function() {
                 getFavoris();
             })
-            .catch(function (error) {
+            .catch(function(error) {
                 console.log(error);
             });
     } catch (e) {
@@ -303,29 +303,36 @@ function createCards(data, next, previous) {
         event: `nfts(${next})`
     }, divNfts);
 
-
-
-
-    myUniqueCreator = mySelectNumberOfCreator.filter(function (item, pos) {
+    // affichage des créateurs sans doublons
+    myUniqueCreator = mySelectNumberOfCreator.filter(function(item, pos) {
         return mySelectNumberOfCreator.indexOf(item) == pos;
     });
 
-    myUniqueCreator.sort().forEach(function (element) {
-        createElement('option', {
-            text: `<select id="listOfCreator" name="creators">
-        <option value="${element}" >${element}</option>
-    </select>`,
-        }, myListOfcreator);
+    myUniqueCreator.sort().forEach(function(element) {
+        if (element == '') {
+            createElement('option', {
+                text: `<select id="listOfCreator" name="creators">
+            <option value="anonymous" >anonymous creator</option>
+        </select>`,
+            }, myListOfcreator);
+        } else {
+            createElement('option', {
+                text: `<select id="listOfCreator" name="creators">
+            <option value="${element}" >${element}</option>
+        </select>`,
+            }, myListOfcreator);
+        }
+
     })
 
-
-    myUniqueSales = mySelectNumberOfSale.filter(function (item, pos) {
+    // affichage des ventes sans doublons
+    myUniqueSales = mySelectNumberOfSale.filter(function(item, pos) {
         return mySelectNumberOfSale.indexOf(item) == pos;
     });
 
-    myUniqueSales.sort(function (a, b) {
+    myUniqueSales.sort(function(a, b) {
         return a - b;
-    }).forEach(function (element) {
+    }).forEach(function(element) {
         createElement('option', {
             text: `<select id="listOfSale" name="sales">
                 <option value="${element}" >${element}</option>
@@ -497,7 +504,7 @@ function favorisNft(id, image, name) {
     }
 
     let bool = 0;
-    favoris.forEach(function (element) {
+    favoris.forEach(function(element) {
         if (element.id == nft.id) {
             bool = 1;
             let index_favoris = favoris.indexOf(element);
@@ -522,7 +529,7 @@ function getFavoris() {
     if (localStorage.getItem('like')) {
         let fav = localStorage.getItem('like');
         favoris = JSON.parse(fav);
-        favoris.forEach(function (element) {
+        favoris.forEach(function(element) {
             if (document.querySelector(`#fav_${element.id} svg`)) {
                 document.querySelector(`#fav_${element.id}`).classList.add('favoris');
                 document.querySelector(`#fav_${element.id} svg`).style.fill = "black";
@@ -538,7 +545,7 @@ function favorisNftFav(id, image, name) {
         name: name
     }
 
-    favoris.forEach(function (element) {
+    favoris.forEach(function(element) {
         if (element.id == nft.id) {
             let index_favoris = favoris.indexOf(element);
             favoris.splice(index_favoris, 1);
@@ -563,9 +570,9 @@ function loadImage() {
             clearTimeout(lazyloadTimeout); //annule le délais de setTimeout précédent
         }
 
-        lazyloadTimeout = setTimeout(function () {
+        lazyloadTimeout = setTimeout(function() {
             let scrollTop = window.pageYOffset;
-            lazyImages.forEach(function (img) {
+            lazyImages.forEach(function(img) {
                 if (img.parentNode.offsetTop < (window.innerHeight + scrollTop)) {
                     img.src = img.dataset.src;
                     img.classList.remove('lazy');
