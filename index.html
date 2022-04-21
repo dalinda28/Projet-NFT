@@ -46,9 +46,9 @@
     //It's a function that is called when the user change the value of the select of cretaor.
     myListOfcreator.addEventListener('change', e => {
         input = e.target.value;
-        var pat = new RegExp(input, 'i');
-        for (var i = 0; i < items.length; i++) {
-            var item = items[i];
+        let pat = new RegExp(input, 'i');
+        for (let i = 0; i < items.length; i++) {
+            let item = items[i];
             if (pat.test(item.innerText)) {
                 item.classList.remove("hidden");
             } else if (input == 'All creators') {
@@ -95,15 +95,15 @@
     //It's a function that is called when the user change the value of the innput of the Searchbar
     myInput.addEventListener('keyup', e => {
         const searchString = e.target.value;
-        var pat = new RegExp(searchString, 'i');
+        let pat = new RegExp(searchString, 'i');
 
         const filteredNfts = mySelectNameNft.filter((character) => {
             return (
                 character.includes(searchString)
             );
         });
-        for (var i = 0; i < articles.length; i++) {
-            var item = articles[i];
+        for (let i = 0; i < articles.length; i++) {
+            let item = articles[i];
             if (pat.test(item.innerText)) {
                 item.classList.remove("hidden");
             } else {
