@@ -98,7 +98,7 @@ createElement('a', {
 
 createElement('a', {
     href: './favoris.html',
-    text: 'My whishlist',
+    text: 'My wishlist',
     margin: '15px 0 '
 }, myLiMenu2)
 
