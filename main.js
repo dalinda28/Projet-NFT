@@ -1,5 +1,8 @@
 const root = document.querySelector('body');
-
+/**
+ * It fetches the data from the API, creates the cards, gets the favorites and loads the images
+ * @param page - The page number of the results to retrieve.
+ */
 async function nfts(page) {
     try {
         if (document.querySelector('.nfts')) {
@@ -19,13 +22,13 @@ async function nfts(page) {
                 // })
                 createCards(nfts, next, previous);
             })
-            .then(function() {
+            .then(function () {
                 getFavoris();
             })
-            .then(function() {
+            .then(function () {
                 loadImage();
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log(error);
             });
     } catch (e) {
@@ -33,16 +36,19 @@ async function nfts(page) {
     }
 }
 
+/**
+ * It fetches the data from the API and then creates a card with the data
+ */
 async function unNft() {
     try {
         const url = `https://awesome-nft-app.herokuapp.com/nft/${id}`;
 
         fetch(url)
             .then((resp) => resp.json())
-            .then(function(unNft) {
+            .then(function (unNft) {
                 createCard(unNft);
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log(error);
             });
     } catch (e) {
@@ -50,6 +56,10 @@ async function unNft() {
     }
 }
 
+/**
+ * It fetches the data from the API, creates the cards and then calls the function that gets the
+ * favorites
+ */
 async function carousel() {
     try {
         const url = 'https://awesome-nft-app.herokuapp.com/';
@@ -60,10 +70,10 @@ async function carousel() {
                 let nfts = data.assets;
                 createCardsCarousel(nfts);
             })
-            .then(function() {
+            .then(function () {
                 getFavoris();
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log(error);
             });
     } catch (e) {
@@ -81,17 +91,24 @@ const myLiMenu1 = createElement('li', {}, myUlMenu);
 const myLiMenu2 = createElement('li', {}, myUlMenu);
 
 createElement('a', {
-    href: 'index.html',
+    href: './index.html',
     text: 'Home',
     margin: '15px 0'
 }, myLiMenu1)
 
 createElement('a', {
-    href: 'favoris.html',
+    href: './favoris.html',
     text: 'My whishlist',
     margin: '15px 0 '
 }, myLiMenu2)
 
+/**
+ * It creates an HTML element and appends it to the DOM
+ * @param tag - the tag of the element to create.
+ * @param config - an object containing the parameters of the element to be created.
+ * @param [parent=null] - the parent element of the element to create.
+ * @returns The element that was created.
+ */
 function createElement(tag, config, parent = null) {
     const {
         text,
@@ -178,7 +195,8 @@ function createElement(tag, config, parent = null) {
     return element;
 }
 
-
+/* The above code is creating a function called createCards. The function takes in three parameters:
+data, next, and previous. */
 function createCards(data, next, previous) {
     createElement('option', {
         text: `<select id="listOfSale" name="sales">
@@ -191,7 +209,8 @@ function createCards(data, next, previous) {
 </select>`,
     }, myListOfcreator);
 
-
+    /* Creating a div element with the class of nfts, and setting the display to flex, flexFlow to
+       wrap, and placeContent to space-evenly. */
     const divNfts = createElement('div', {
         classe: 'nfts',
         display: 'flex',
@@ -199,9 +218,11 @@ function createCards(data, next, previous) {
         placeContent: 'space-evenly'
     });
 
+    /* The above code is declaring two variables. */
     let mySelectNumberOfSale = [];
     let mySelectNumberOfCreator = [];
 
+    /* Creating a card for each NFT in the data array. */
     data.forEach((el, index) => {
         if (root.classList.contains('home')) {
 
@@ -264,7 +285,7 @@ function createCards(data, next, previous) {
         }, myCard);
         createElement('a', {
             text: 'Learn more',
-            href: `/detailNft.html?id=${el.id}`,
+            href: `./detailNft.html?id=${el.id}`,
             role: "button"
         }, myCardFooter);
         createElement('p', {
@@ -282,7 +303,7 @@ function createCards(data, next, previous) {
         margin: '30px 0 50px '
     }, divNfts)
 
-    //boutons next et previous
+    /* Creating a button with the text "Previous" and "Suivant" */
     createElement('button', {
         text: 'Previous',
         event: `nfts(${previous})`,
@@ -298,12 +319,13 @@ function createCards(data, next, previous) {
         margin: '0 10px'
     }, myButton);
 
-    // affichage des créateurs sans doublons
-    myUniqueCreator = mySelectNumberOfCreator.filter(function(item, pos) {
+    /* The above code is filtering the array mySelectNumberOfCreator and returning only the unique
+    values. */
+    myUniqueCreator = mySelectNumberOfCreator.filter(function (item, pos) {
         return mySelectNumberOfCreator.indexOf(item) == pos;
     });
-
-    myUniqueCreator.sort().forEach(function(element) {
+    /* The above code is creating a dropdown list of creators. */
+    myUniqueCreator.sort().forEach(function (element) {
         if (element == '') {
             createElement('option', {
                 text: `<select id="listOfCreator" name="creators">
@@ -320,14 +342,14 @@ function createCards(data, next, previous) {
 
     })
 
-    // affichage des ventes sans doublons
-    myUniqueSales = mySelectNumberOfSale.filter(function(item, pos) {
+    /* The above code is filtering the array mySelectNumberOfSale and returning only the unique values. */
+    myUniqueSales = mySelectNumberOfSale.filter(function (item, pos) {
         return mySelectNumberOfSale.indexOf(item) == pos;
     });
-
-    myUniqueSales.sort(function(a, b) {
+/* The above code is creating a dropdown list of unique sales. */
+    myUniqueSales.sort(function (a, b) {
         return a - b;
-    }).forEach(function(element) {
+    }).forEach(function (element) {
         createElement('option', {
             text: `<select id="listOfSale" name="sales">
                 <option value="${element}" >${element}</option>
@@ -336,10 +358,11 @@ function createCards(data, next, previous) {
     })
 }
 
-
-
-
-
+/**
+ * It creates a card with the image, name, creator, date of creation, number of sales and description
+ * of the NFT
+ * @param unNft - the NFT object
+ */
 function createCard(unNft) {
     myImg = createElement('img', {
         width: '40%'
@@ -387,7 +410,10 @@ function createCard(unNft) {
         }, myInfos)
     }
 }
-
+/**
+ * It creates a card for each element of the array, and adds it to the div
+ * @param data - the data to display
+ */
 function createCardsCarousel(data) {
     data.slice(0, 10).forEach(el => {
         myCard = createElement('article', {
@@ -434,19 +460,16 @@ function createCardsCarousel(data) {
         }, myCard);
         createElement('a', {
             text: 'Learn more',
-            href: `/detailNft.html?id=${el.id}`,
+            href: `./detailNft.html?id=${el.id}`,
             role: "button"
         }, myCardFooter);
-        // createElement('p', {
-        //     classe: 'like',
-        //     event: `favorisNft(fav_${el.id})`,
-        //     identifiant: `fav_${el.id}`,
-        //     margin: '0',
-        //     text: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>',
-        // }, myCardFooter);
     })
 }
 
+/**
+ * It creates a card for each element of the data array, and adds it to the page
+ * @param data - the data to display
+ */
 function createCardsFav(data) {
     data.forEach((el, index) => {
         myCard = createElement('article', {
@@ -476,7 +499,7 @@ function createCardsFav(data) {
         }, myCard);
         createElement('a', {
             text: 'Learn more',
-            href: `/detailNft.html?id=${el.id}`,
+            href: `./detailNft.html?id=${el.id}`,
             role: "button"
         }, myCardFooter);
         createElement('p', {
@@ -491,6 +514,12 @@ function createCardsFav(data) {
 
 let favoris = [];
 
+/**
+ * It adds or removes an NFT from the favorites list
+ * @param id - the id of the NFT
+ * @param image - the image of the NFT
+ * @param name - The name of the NFT
+ */
 function favorisNft(id, image, name) {
     let nft = {
         id: id,
@@ -499,7 +528,7 @@ function favorisNft(id, image, name) {
     }
 
     let bool = 0;
-    favoris.forEach(function(element) {
+    favoris.forEach(function (element) {
         if (element.id == nft.id) {
             bool = 1;
             let index_favoris = favoris.indexOf(element);
@@ -520,11 +549,16 @@ function favorisNft(id, image, name) {
     localStorage.setItem('like', JSON.stringify(favoris));
 }
 
+/**
+ * It checks if there is a localStorage item called 'like', if there is, it gets the value of the item,
+ * parses it to JSON, and then loops through the array of objects and adds a class and a style to the
+ * element
+ */
 function getFavoris() {
     if (localStorage.getItem('like')) {
         let fav = localStorage.getItem('like');
         favoris = JSON.parse(fav);
-        favoris.forEach(function(element) {
+        favoris.forEach(function (element) {
             if (document.querySelector(`#fav_${element.id} svg`)) {
                 document.querySelector(`#fav_${element.id}`).classList.add('favoris');
                 document.querySelector(`#fav_${element.id} svg`).style.fill = "black";
@@ -532,7 +566,12 @@ function getFavoris() {
         })
     };
 }
-
+/**
+ * The favorites list NFT
+ * @param id - the id of the NFT
+ * @param image - the image of the NFT
+ * @param name - The name of the NFT
+ */
 function favorisNftFav(id, image, name) {
     let nft = {
         id: id,
@@ -540,7 +579,7 @@ function favorisNftFav(id, image, name) {
         name: name
     }
 
-    favoris.forEach(function(element) {
+    favoris.forEach(function (element) {
         if (element.id == nft.id) {
             let index_favoris = favoris.indexOf(element);
             favoris.splice(index_favoris, 1);
@@ -554,6 +593,9 @@ function favorisNftFav(id, image, name) {
     localStorage.setItem('like', JSON.stringify(favoris));
 }
 
+/**
+ * It loads the images when the user scrolls down to them
+ */
 function loadImage() {
     const lazyImages = document.querySelectorAll(".nft_img");
 
@@ -565,9 +607,9 @@ function loadImage() {
             clearTimeout(lazyloadTimeout); //annule le délais de setTimeout précédent
         }
 
-        lazyloadTimeout = setTimeout(function() {
+        lazyloadTimeout = setTimeout(function () {
             let scrollTop = window.pageYOffset;
-            lazyImages.forEach(function(img) {
+            lazyImages.forEach(function (img) {
                 if (img.parentNode.offsetTop < (window.innerHeight + scrollTop)) {
                     img.src = img.dataset.src;
                     img.classList.remove('lazy');

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/node_modules/@picocss/pico/css/pico.min.css">
+    <link rel="stylesheet" href="./node_modules/@picocss/pico/css/pico.min.css">
     <title>NonFungible.com</title>
     <link rel="icon" type="image/png" sizes="16x16" href="./NFT_Icon.png">
     <link href="style.css" rel="stylesheet">
@@ -34,7 +34,8 @@
         placeContent: 'center',
         margin: '50px 0 0'
     });
-    // Trie par créateurs
+
+    // Sort the creator
     const myListOfcreator = createElement('select', {
         width: '25%',
     }, searchBox);
@@ -42,6 +43,7 @@
     const items = document.getElementsByTagName('article');
     const sales = document.getElementsByClassName('sales');
 
+    //It's a function that is called when the user change the value of the select of cretaor.
     myListOfcreator.addEventListener('change', e => {
         input = e.target.value;
         var pat = new RegExp(input, 'i');
@@ -57,12 +59,12 @@
         }
     });
 
-    //trie par vente
+    // Sort the sales
     const myListOfSales = createElement('select', {
         width: '15%',
         margin: '0 20px 20px'
     }, searchBox);
-
+    //It's a function that is called when the user change the value of the select of Sales.
     myListOfSales.addEventListener('change', e => {
         input = e.target.value;
         let pat = new RegExp(`^${input}$`, 'i');
@@ -90,6 +92,7 @@
     }, searchBox);
 
     const articles = document.getElementsByTagName('article');
+    //It's a function that is called when the user change the value of the innput of the Searchbar
     myInput.addEventListener('keyup', e => {
         const searchString = e.target.value;
         var pat = new RegExp(searchString, 'i');
