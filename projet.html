@@ -27,6 +27,7 @@
             fetch(url)
                 .then((resp) => resp.json())
                 .then(function (data) {
+                    console.log(data);
                     let nfts = data.assets;
                     nfts = nfts.filter(function (val) {
                         return val.creator.username != '';
@@ -75,7 +76,10 @@
     const myDiv = createElement('div');
 
     function clickHandle(event) {
+        
         let CreatorElement = Array.from(document.getElementsByClassName('hidden'));
+        console.log(CreatorElement)
+
     }
 
     function createCards(data) {
@@ -125,7 +129,7 @@
 
     nft();
 
-    //Adding an event listener to the document element.
+    //Listen 
     document.documentElement.addEventListener('click', clickHandle, false);
 
 </script>

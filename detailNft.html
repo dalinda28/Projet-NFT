@@ -22,7 +22,7 @@
     let search_params = new URLSearchParams(url.search);
     const id = search_params.get('id');
 
-    //It creates the card of the NFT
+    // création de la carte du NFT
     const myNft = createElement('div', {
         classe: 'nft_alone',
         display: 'flex',
@@ -57,7 +57,7 @@
         classe: 'next',
     }, nav);
 
-    //It creates the carousel
+    // création du carousel
     const myDiv = createElement('div', {
         display: 'flex',
         classe: 'carousel',
@@ -69,7 +69,6 @@
     const next = document.querySelector('.next');
     const slider = document.querySelector('.carousel');
 
-    //The slider will move to the next image.
     next.addEventListener('click', async() => {
         slider.style.transition = await 'none';
         slider.append(slider.firstElementChild);
@@ -79,7 +78,6 @@
         })
     })
 
-    //The slider will move to the prev image.
     prev.addEventListener('click', async() => {
         slider.style.transition = '.3s ease-in-out';
         slider.prepend(slider.lastElementChild);
